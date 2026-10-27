@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "primeshulkertooltip",
+	"version": "${version}",
+	"name": "Prime Shulker Tooltip 26.3",
+	"description": "Zeigt den Inhalt von Shulkerkisten als Tooltip an - auch für die Custom-Größen mit 4 bis 6 Reihen.",
+	"authors": ["BIG_Gamba"],
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["de.primeshulker.client.PrimeShulkerTooltipClient"]
+	},
+	"mixins": [
+		{
+			"config": "primeshulkertooltip.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

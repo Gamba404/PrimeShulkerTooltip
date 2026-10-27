@@ -1,0 +1,11 @@
+{
+	"schemaVersion": 1,
+	"id": "primeshulkertooltip-test",
+	"version": "1.0.0",
+	"name": "PrimeShulkerTooltip Test",
+	"environment": "client",
+	"entrypoints": {
+		"fabric-client-gametest": ["de.primeshulker.test.TooltipTest"]
+	},
+	"depends": { "primeshulkertooltip": "*" }
+}
