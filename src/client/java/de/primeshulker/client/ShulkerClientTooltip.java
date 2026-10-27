@@ -1,5 +1,7 @@
 package de.primeshulker.client;
 
+import de.primeshulker.client.mixin.GuiGraphicsExtractorAccessor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -55,6 +57,40 @@ public class ShulkerClientTooltip implements ClientTooltipComponent {
 		if (data.isEmpty()) {
 			drawEmptyLabel(font, graphics, x, y, width, height);
 		}
+		if (ShulkerLock.isActive()) {
+			drawHoveredItem(font, graphics, x, y);
+		}
+	}
+
+	/** Bei festgehaltenem Tooltip (Shift + Alt): Item unter der Maus hervorheben und dessen eigenen Tooltip zeigen. */
+	private void drawHoveredItem(Font font, GuiGraphicsExtractor graphics, int x, int y) {
+		Minecraft mc = Minecraft.getInstance();
+		int mouseX = (int) mc.mouseHandler.getScaledXPos(mc.getWindow());
+		int mouseY = (int) mc.mouseHandler.getScaledYPos(mc.getWindow());
+		int col = Math.floorDiv(mouseX - x - PADDING, SLOT);
+		int row = Math.floorDiv(mouseY - y - PADDING, SLOT);
+		if (col < 0 || col >= ShulkerData.COLUMNS || row < 0 || row >= data.rows()) {
+			return;
+		}
+		int index = row * ShulkerData.COLUMNS + col;
+		if (index >= data.items().size() || data.items().get(index).isEmpty()) {
+			return;
+		}
+		ItemStack stack = data.items().get(index);
+		int sx = x + PADDING + col * SLOT;
+		int sy = y + PADDING + row * SLOT;
+		graphics.fill(sx + 1, sy + 1, sx + SLOT - 1, sy + SLOT - 1, 0x80FFFFFF);
+
+		// Der äußere Tooltip wird gerade selbst als "deferred" gezeichnet, deshalb den inneren sofort zeichnen.
+		var accessor = (GuiGraphicsExtractorAccessor) graphics;
+		Runnable outer = accessor.primeshulker$getDeferredTooltip();
+		accessor.primeshulker$setDeferredTooltip(null);
+		graphics.setTooltipForNextFrame(font, stack, mouseX, mouseY);
+		Runnable inner = accessor.primeshulker$getDeferredTooltip();
+		if (inner != null) {
+			inner.run();
+		}
+		accessor.primeshulker$setDeferredTooltip(outer);
 	}
 
 	private static void drawEmptyLabel(Font font, GuiGraphicsExtractor graphics, int x, int y, int width, int height) {

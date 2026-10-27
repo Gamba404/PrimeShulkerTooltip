@@ -7,6 +7,7 @@ Autor: BIG_Gamba
 ## Features
 
 - **Shift halten = Raster:** Ohne Shift bleibt die normale Anzeige. Mit Shift erscheint der volle Inhalt als Raster, jeder Gegenstand genau an seinem Slot, inklusive Stackgröße.
+- **Items genau ansehen (Shift + Alt):** Das Raster bleibt festgehalten. Fahre mit der Maus über ein Item, es wird hervorgehoben und zeigt seinen eigenen Tooltip, wie im Inventar.
 - **Alle Größen:** 3 Reihen (normal) und Custom-Größen mit 4, 5 und 6 Reihen. Die Größe wird automatisch erkannt.
 - **Leere Kisten:** Eine leere Shulker zeigt das leere Raster mit "Leer".
 - **Farbe der Kiste:** Alle 16 Shulkerfarben plus die lila Standard-Kiste haben ihre eigene Hintergrundfarbe.
@@ -25,6 +26,8 @@ Autor: BIG_Gamba
 | 5 Reihen | 6 Reihen |
 |---|---|
 | ![5 Reihen](docs/screenshots/5-prime-5-reihen.png) | ![6 Reihen](docs/screenshots/6-prime-6-reihen.png) |
+
+![Shift + Alt](docs/screenshots/8-shift-alt-item-ansehen.png)
 
 ![Alle Farben](docs/screenshots/7-alle-17-farben.png)
 

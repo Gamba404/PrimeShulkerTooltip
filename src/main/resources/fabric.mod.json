@@ -6,6 +6,7 @@
 	"description": "Zeigt den Inhalt von Shulkerkisten als Tooltip an - auch für die Custom-Größen mit 4 bis 6 Reihen.",
 	"authors": ["BIG_Gamba"],
 	"license": "MIT",
+	"icon": "assets/primeshulkertooltip/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": ["de.primeshulker.client.PrimeShulkerTooltipClient"]

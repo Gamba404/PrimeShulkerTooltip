@@ -44,6 +44,8 @@ public class TooltipTest implements FabricClientGameTest {
 				show(context, world, item, "04-prime-" + rows + "-reihen", true);
 			}
 
+			lockedHover(context, world, "light_blue_shulker_box[container=" + vanillaContent + "]");
+
 			int n = 0;
 			for (String c : COLORS) {
 				show(context, world, c + "shulker_box[container=" + container("diamond", 1) + "]",
@@ -69,6 +71,26 @@ public class TooltipTest implements FabricClientGameTest {
 		if (shift) {
 			context.getInput().releaseShift();
 		}
+	}
+
+	/** Shift + Alt: Tooltip festhalten, dann mit der Maus auf ein Item im Raster fahren. */
+	private static void lockedHover(ClientGameTestContext context, TestSingleplayerContext world, String item) {
+		world.getServer().runCommand("clear @p");
+		world.getServer().runCommand("item replace entity @p container.9 with " + item);
+		context.waitTicks(6);
+		double[] pos = findBox(context);
+		context.getInput().setCursorPos(0, 0);
+		context.waitTicks(2);
+		context.getInput().setCursorPos(pos[0], pos[1]);
+		context.waitTicks(4);
+		context.getInput().holdShift();
+		context.getInput().holdAlt();
+		context.waitTicks(4);
+		context.getInput().setCursorPos(pos[0] + 135, pos[1] + 15);
+		context.waitTicks(6);
+		context.takeScreenshot("05-fixiert-item-hover");
+		context.getInput().releaseAlt();
+		context.getInput().releaseShift();
 	}
 
 	private static double[] findBox(ClientGameTestContext context) {

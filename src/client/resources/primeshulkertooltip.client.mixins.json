@@ -3,8 +3,10 @@
 	"package": "de.primeshulker.client.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-		"ItemStackMixin",
-		"ItemContainerContentsMixin"
+		"AbstractContainerScreenMixin",
+		"GuiGraphicsExtractorAccessor",
+		"ItemContainerContentsMixin",
+		"ItemStackMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
