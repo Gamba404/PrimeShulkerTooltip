@@ -33,7 +33,7 @@ public class ShulkerClientTooltip implements ClientTooltipComponent {
 	public void extractImage(Font font, int x, int y, int totalWidth, int totalHeight, GuiGraphicsExtractor graphics) {
 		int width = getWidth(font);
 		int height = data.rows() * SLOT + 2 * PADDING;
-		int base = soften(ShulkerColors.of(data.color()));
+		int base = soften(data.color());
 		int border = shade(base, 0.45f);
 		int slotFill = shade(base, 1.12f);
 

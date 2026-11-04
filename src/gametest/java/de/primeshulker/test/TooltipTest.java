@@ -44,6 +44,15 @@ public class TooltipTest implements FabricClientGameTest {
 				show(context, world, item, "04-prime-" + rows + "-reihen", true);
 			}
 
+			StringBuilder bundle = new StringBuilder("[");
+			String[] bundleItems = {"diamond", "emerald", "gold_ingot", "iron_ingot", "copper_ingot", "coal", "lapis_lazuli", "redstone", "quartz", "amethyst_shard",
+				"stick", "string", "feather", "bone", "flint", "clay_ball", "brick", "paper", "book", "slime_ball", "snowball", "egg", "arrow", "ender_pearl", "blaze_rod"};
+			for (int i = 0; i < bundleItems.length; i++) {
+				bundle.append(i > 0 ? "," : "").append("{id:\"minecraft:").append(bundleItems[i]).append("\",count:").append(1 + i % 7).append("}");
+			}
+			bundle.append("]");
+			show(context, world, "red_bundle[bundle_contents=" + bundle + "]", "06-bundle-gross", true);
+			show(context, world, "bundle", "07-bundle-leer", true);
 			lockedHover(context, world, "light_blue_shulker_box[container=" + vanillaContent + "]");
 
 			int n = 0;
@@ -97,7 +106,7 @@ public class TooltipTest implements FabricClientGameTest {
 		return context.computeOnClient(mc -> {
 			var screen = (AbstractContainerScreen<?>) mc.gui.screen();
 			for (Slot slot : screen.getMenu().slots) {
-				if (slot.getItem().getItem().toString().contains("shulker_box")) {
+				if (slot.getItem().getItem().toString().contains("shulker_box") || slot.getItem().getItem().toString().contains("bundle")) {
 					double scale = mc.getWindow().getGuiScale();
 					return new double[] {((screen.width - 176) / 2 + slot.x + 8) * scale, ((screen.height - 166) / 2 + slot.y + 8) * scale};
 				}

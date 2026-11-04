@@ -7,13 +7,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -24,7 +27,7 @@ import net.minecraft.world.level.block.ShulkerBoxBlock;
  * Inhalt und Größe einer Shulker für den Tooltip.
  * Die Reihenzahl ergibt sich aus dem Inhalt und aus der PrimeBlocks-Lagerung (Stufe I-III = 4-6 Reihen).
  */
-public record ShulkerData(List<ItemStack> items, int rows, DyeColor color) implements TooltipComponent {
+public record ShulkerData(List<ItemStack> items, int rows, int color) implements TooltipComponent {
 	public static final int COLUMNS = 9;
 	public static final int VANILLA_ROWS = 3;
 	public static final int MAX_ROWS = 12;
@@ -37,9 +40,20 @@ public record ShulkerData(List<ItemStack> items, int rows, DyeColor color) imple
 	}
 
 	public static Optional<ShulkerData> of(ItemStack stack) {
-		if (stack.isEmpty() || !(stack.getItem() instanceof BlockItem item) || !(item.getBlock() instanceof ShulkerBoxBlock box)) {
+		if (stack.isEmpty()) {
 			return Optional.empty();
 		}
+		if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof ShulkerBoxBlock box) {
+			return Optional.of(shulker(stack, box));
+		}
+		BundleContents bundle = stack.get(DataComponents.BUNDLE_CONTENTS);
+		if (stack.getItem() instanceof BundleItem && bundle != null) {
+			return Optional.of(bundle(stack, bundle));
+		}
+		return Optional.empty();
+	}
+
+	private static ShulkerData shulker(ItemStack stack, ShulkerBoxBlock box) {
 		ItemContainerContents contents = stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
 		List<ItemStack> items = new ArrayList<>(contents.itemCopies().toList());
 		List<ItemStack> extra = PrimeStorage.extraItems(stack);
@@ -50,8 +64,19 @@ public record ShulkerData(List<ItemStack> items, int rows, DyeColor color) imple
 			items.addAll(extra);
 		}
 		int rows = Math.max(VANILLA_ROWS + storageLevel(stack), (items.size() + COLUMNS - 1) / COLUMNS);
-		rows = Math.clamp(rows, VANILLA_ROWS, MAX_ROWS);
-		return Optional.of(new ShulkerData(items, rows, box.getColor()));
+		return new ShulkerData(items, Math.clamp(rows, VANILLA_ROWS, MAX_ROWS), ShulkerColors.of(box.getColor()));
+	}
+
+	/** Bundles: alle Items anzeigen, unabhängig von der Vanilla-Grenze für die Rasteranzeige. */
+	private static ShulkerData bundle(ItemStack stack, BundleContents bundle) {
+		List<ItemStack> items = bundle.itemCopies().toList();
+		int rows = Math.clamp((items.size() + COLUMNS - 1) / COLUMNS, 1, MAX_ROWS);
+		return new ShulkerData(items, rows, ShulkerColors.ofBundle(bundleColor(stack)));
+	}
+
+	private static DyeColor bundleColor(ItemStack stack) {
+		String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+		return path.endsWith("_bundle") ? DyeColor.byName(path.substring(0, path.length() - "_bundle".length()), null) : null;
 	}
 
 	public boolean isEmpty() {

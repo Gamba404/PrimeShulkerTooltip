@@ -8,6 +8,7 @@ import net.minecraft.world.item.DyeColor;
 /** Hintergrundfarbe pro Shulker: Dye-Farbe, bei der ungefärbten Kiste der Durchschnitt ihrer Textur. */
 public final class ShulkerColors {
 	private static final int FALLBACK = 0x8B5E8B;
+	private static final int BUNDLE_BROWN = 0x9A6B3F;
 	private static int undyed = -1;
 
 	private ShulkerColors() {
@@ -21,6 +22,11 @@ public final class ShulkerColors {
 			undyed = averageTexture("textures/entity/shulker/shulker.png");
 		}
 		return undyed < 0 ? FALLBACK : undyed;
+	}
+
+	/** Dye-Farbe des Bundles, ohne Farbe das typische Lederbraun. */
+	public static int ofBundle(DyeColor color) {
+		return color != null ? color.getTextureDiffuseColor() & 0xFFFFFF : BUNDLE_BROWN;
 	}
 
 	private static int averageTexture(String path) {
