@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "primeshulkertooltip",
 	"version": "${version}",
-	"name": "Prime Shulker Tooltip 26.3",
+	"name": "Prime Shulker Tooltip",
 	"description": "Zeigt den Inhalt von Shulkerkisten als Tooltip an - auch für die Custom-Größen mit 4 bis 6 Reihen.",
 	"authors": ["BIG_Gamba"],
 	"license": "MIT",
